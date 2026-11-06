@@ -1,0 +1,492 @@
+<article class="overflow-visible rounded-xl border border-slate-200 bg-white shadow-sm mt-4">
+  <div class="p-4">
+    <div class="flex items-center gap-3">
+      <a class="shrink-0" [routerLink]="post().user._id === myId() ? ['/profile'] : ['/profile/u-profile', post().user._id]"
+        ><img
+          [alt]="post().user.name"
+          class="h-11 w-11 rounded-full object-cover"
+          [src]="post().user.photo"
+      /></a>
+      <div class="min-w-0 flex-1">
+        <a
+          class="truncate text-sm font-bold text-foreground hover:underline"
+          [routerLink]="post().user._id === myId() ? ['/profile'] : ['/profile/u-profile', post().user._id]"
+        >
+          {{ post().user.name }}
+        </a>
+        <div class="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+          {{ post().user.username }}
+          <button
+            type="button"
+            class="rounded px-0.5 py-0.5 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 hover:underline"
+          >
+            {{ post().createdAt | date }}
+          </button>
+          <span class="mx-1">·</span>
+          <span class="inline-flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-earth"
+              aria-hidden="true"
+            >
+              <path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"></path>
+              <path
+                d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"
+              ></path>
+              <path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"></path>
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            {{ post().privacy }}
+          </span>
+        </div>
+      </div>
+      <div #menuWrap class="relative">
+        <button
+          (click)="togglebutton()"
+          class="rounded-full cursor-pointer p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-ellipsis"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="19" cy="12" r="1"></circle>
+            <circle cx="5" cy="12" r="1"></circle>
+          </svg>
+        </button>
+        <div
+          [class.hidden]="!isOpen()"
+          class="absolute right-0 z-20 mt-1 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          <button
+            (click)="toggleSave()"
+            class="flex cursor-pointer w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-bookmark"
+              aria-hidden="true"
+            >
+              <path
+                d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"
+              ></path>
+            </svg>
+            {{ isSaved() ? 'Unsave post' : 'Save post' }}
+          </button>
+          @if (post().user._id === myId()) {
+            <button
+              (click)="openEditAlert()"
+              class="flex cursor-pointer w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-pencil"
+                aria-hidden="true"
+              >
+                <path
+                  d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"
+                ></path>
+                <path d="m15 5 4 4"></path>
+              </svg>
+              Edit post
+            </button>
+            <button
+              (click)="deleteMyPost(post()._id)"
+              class="flex cursor-pointer w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-trash2 lucide-trash-2"
+                aria-hidden="true"
+              >
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                <path d="M3 6h18"></path>
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              Delete post
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="max-h-[620px] overflow-hidden border-t border-slate-200">
+    @if (post().body) {
+      <p class="ms-0.5 p-4 font-bold text-slate-600">{{ post().body }}</p>
+    }
+    @if (isSaved()) {
+      <div
+        class="m-3 inline-flex items-center gap-1 rounded-full bg-[#e7f3ff] px-2.5 py-1 text-[11px] font-bold text-[#1877f2]"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-bookmark"
+          aria-hidden="true"
+        >
+          <path
+            d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"
+          ></path>
+        </svg>
+          Saved
+      </div>
+    }
+    @if (post().image; as img) {
+      <button
+        type="button"
+        (click)="openImage(img)"
+        class="group relative block w-full cursor-pointer"
+      >
+        <img alt="post" class="w-full object-cover" [src]="post().image" /><span
+          class="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/15"
+        ></span>
+      </button>
+    }
+  </div>
+  @if (post().sharedPost) {
+    <div class="mx-4 my-3 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+      @if (post().sharedPost; as shared) {
+        <div class="p-3">
+          <div class="mb-2 flex items-center gap-2">
+            <img
+              [alt]="post().sharedPost?.user?.name"
+              class="h-9 w-9 rounded-full object-cover"
+              [src]="post().sharedPost?.user?.photo"
+            />
+            <div class="min-w-0">
+              <p class="truncate text-sm font-bold text-slate-900">
+                {{ post().sharedPost?.user?.name }}
+              </p>
+              <p class="truncate text-xs text-slate-500">{{ post().sharedPost?.user?.username }}</p>
+            </div>
+            <button
+              [routerLink]="['/p-details', post().sharedPost?._id]"
+              class="ml-auto cursor-pointer inline-flex items-center gap-1 rounded px-3 py-1.5 text-xs font-bold text-[#1877f2] hover:bg-[#e7f3ff]"
+            >
+              Original Post
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-external-link"
+                aria-hidden="true"
+              >
+                <path d="M15 3h6v6"></path>
+                <path d="M10 14 21 3"></path>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              </svg>
+            </button>
+          </div>
+          <p class="text-sm text-slate-500">Shared post content unavailable.</p>
+        </div>
+        <div class="border-t border-slate-200">
+          @if (post().sharedPost?.body) {
+            <p class="ms-0.5 p-4 font-bold text-slate-600">{{ post().sharedPost?.body }}</p>
+          }
+          @if (shared.image) {
+            <button
+              (click)="openImage(shared.image)"
+              type="button"
+              class="group relative block w-full cursor-zoom-in"
+            >
+              <img
+                alt="Shared post"
+                class="max-h-[560px] w-full object-cover"
+                [src]="shared.image"
+              /><span
+                class="cursor-pointer absolute inset-0 bg-black/0 transition group-hover:bg-black/10"
+              ></span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+  <div class="px-4 pb-2 pt-3 text-sm text-slate-500">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span
+          class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#1877f2] text-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-thumbs-up"
+            aria-hidden="true"
+          >
+            <path
+              d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"
+            ></path>
+            <path d="M7 10v12"></path>
+          </svg>
+        </span>
+        <button
+          type="button"
+          (click)="openLikeAlert()"
+          [disabled]="!post().likesCount"
+          class="cursor-pointer font-semibold transition hover:text-[#1877f2] hover:underline disabled:cursor-default disabled:hover:text-slate-500 disabled:hover:no-underline"
+        >
+          {{ post().likesCount }} Like
+        </button>
+      </div>  
+      <div class="flex flex-wrap items-center gap-2 text-xs sm:gap-3 sm:text-sm">
+        <span class="inline-flex items-center gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-repeat2 lucide-repeat-2"
+            aria-hidden="true"
+          >
+            <path d="m2 9 3-3 3 3"></path>
+            <path d="M13 18H7a2 2 0 0 1-2-2V6"></path>
+            <path d="m22 15-3 3-3-3"></path>
+            <path d="M11 6h6a2 2 0 0 1 2 2v10"></path>
+          </svg>
+          {{ post().sharesCount }} shares
+        </span>
+        <span>{{ post().commentsCount }} comments</span>
+        <button
+          [routerLink]="['/p-details', post()._id]"
+          class="cursor-pointer rounded-md px-2 py-1 text-xs font-bold text-[#1877f2] hover:bg-[#e7f3ff]"
+        >
+          View details
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mx-4 border-t border-slate-200"></div>
+  <div class="grid grid-cols-3 gap-1 p-1">
+    <button
+      (click)="toggleLike()"
+      [class.text-blue-600]="post().likes.includes(myId() ?? '')"
+      [class.bg-blue-50]="post().likes.includes(myId() ?? '')"
+      [class.text-slate-600]="!post().likes.includes(myId() ?? '')"
+      [class.hover:bg-slate-100]="!post().likes.includes(myId() ?? '')"
+      class="cursor-pointer flex items-center justify-center gap-1.5 rounded-md p-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-thumbs-up"
+        aria-hidden="true"
+      >
+        <path
+          d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"
+        ></path>
+        <path d="M7 10v12"></path>
+      </svg>
+      <span>Like</span>
+    </button>
+    <button
+      (click)="toggel(post()._id)"
+      class="cursor-pointer flex items-center justify-center gap-1.5 rounded-md p-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm text-slate-600 hover:bg-slate-100"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-message-circle"
+        aria-hidden="true"
+      >
+        <path
+          d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"
+        ></path>
+      </svg>
+      <span>Comment</span>
+    </button>
+    <button
+      (click)="openShareAlert()"
+      class="cursor-pointer flex items-center justify-center gap-1.5 rounded-md p-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:gap-2 sm:text-sm text-slate-600 hover:bg-slate-100"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-share2 lucide-share-2"
+        aria-hidden="true"
+      >
+        <circle cx="18" cy="5" r="3"></circle>
+        <circle cx="6" cy="12" r="3"></circle>
+        <circle cx="18" cy="19" r="3"></circle>
+        <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line>
+        <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line>
+      </svg>
+      <span>Share</span>
+    </button>
+  </div>
+  @if (post().topComment && openCloseComment() !== post()._id) {
+    <div class="mx-4 mb-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+      <p class="mb-2 text-[11px] font-bold uppercase tracking-wide text-slate-500">Top Comment</p>
+      <div class="flex items-start gap-2">
+        <img
+          [alt]="post().topComment.commentCreator.name"
+          class="h-8 w-8 rounded-full object-cover"
+          [src]="post().topComment.commentCreator.photo"
+        />
+        <div class="min-w-0 flex-1 rounded-2xl bg-white px-3 py-2">
+          <p class="truncate text-xs font-bold text-slate-900">
+            {{ post().topComment.commentCreator.name }}
+          </p>
+          <p class="mt-0.5 whitespace-pre-wrap text-sm text-slate-700">
+            {{ post().topComment.commentCreator.username }}
+          </p>
+          @if (post().topComment.content) {
+            <p class="mt-0.5 whitespace-pre-wrap text-sm text-slate-700">
+              {{ post().topComment.content }}
+            </p>
+          }
+          @if (post().topComment.image) {
+            <img
+              alt="Top comment"
+              class="mt-2 max-h-44 w-full rounded-lg object-cover"
+              [src]="post().topComment.image"
+            />
+          }
+        </div>
+      </div>
+      <button
+        (click)="toggel(post()._id)"
+        class="mt-2 cursor-pointer text-xs font-bold text-[#1877f2] hover:underline"
+      >
+        View all comments
+      </button>
+    </div>
+  }
+  @if (openCloseComment() === post()._id) {
+    <app-comment-post [postId]="post()._id"></app-comment-post>
+  }
+</article>
+<!-- *** Alert image *** -->
+@if (imagePreview(); as src) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-14"
+    (click)="closeImage()"
+  >
+    <button
+      type="button"
+      (click)="closeImage()"
+      aria-label="Close"
+      class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+    >
+      <span class="material-icons cursor-pointer">close</span>
+    </button>
+
+    <img
+      [src]="src"
+      alt="post"
+      class="max-h-full max-w-full rounded-lg object-contain"
+      (click)="$event.stopPropagation()"
+    />
+  </div>
+}
+<!-- *** Alert Share *** -->
+@if (showShareAlert()) {
+  <div
+    class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/20 p-4"
+    (click)="closeShareAlert()"
+  >
+    <div
+      class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl"
+      (click)="$event.stopPropagation()"
+    >
+      <app-alert-share [post]="post()" (closed)="closeShareAlert()" />
+    </div>
+  </div>
+}
+<!-- *** Alert Edite My Post *** -->
+@if (showEditAlert()) {
+  <app-alert-edited [post]="post()" (closed)="closeEditAlert()" />
+}
+<!-- *** Alert Post Like *** -->
+@if (showLikeAlert()) {
+  <app-alert-like [postId]="post().id" (closed)="closeLikeAlert()"/>
+}

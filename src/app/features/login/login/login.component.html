@@ -1,0 +1,58 @@
+<div class="mt-6">
+  <!-- Heading -->
+  <h2 class="text-2xl font-bold text-slate-900">Log in to Route Posts</h2>
+  <p class="mt-1 text-sm text-slate-500">Log in and continue your social journey.</p>
+
+  <form [formGroup]="loginForm" (ngSubmit)="loginSubmit()" class="mt-6 flex flex-col gap-4">
+
+    <!-- Email -->
+    <div>
+      <div class="relative">
+        <!-- <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >person_outline</span> -->
+          <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"></i>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email or username"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+        <p class="mt-2 text-xs text-red-600"> Email or username is required.</p>
+      }
+    </div>
+
+    <!-- Password -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >vpn_key</span>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+        <p class="mt-1 text-xs text-red-600">Password must include uppercase, lowercase, number, and special character.</p>
+      }
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="mt-2 w-full rounded-xl bg-blue-900 py-3.5 text-base font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+    >
+      {{login()}}
+    </button>
+
+    <!-- msgError Form -->
+    <!-- @if (msgError()) {
+      <p class="text-center text-red-700 py-4">{{ msgError() }}</p>
+    } -->
+  </form>
+</div>

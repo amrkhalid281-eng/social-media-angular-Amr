@@ -1,0 +1,19 @@
+<div class="space-y-4">
+    @for (posts of myPosts(); track $index) {
+        <app-post-card [post]="posts" />
+    } @empty {
+        @if (!loading()) {
+            <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+                <p class="text-slate-500">No posts yet. Be the first one to publish.</p>
+            </div>
+        }
+    }
+
+    <div appInfiniteScroll (reached)="getUserPost()"></div>
+
+    @if (loading()) {
+        <p class="py-4 text-center text-slate-400">Loading...</p>
+    } @else if (done() && myPosts().length) {
+        <p class="py-4 text-center text-slate-400">You reached the end</p>
+    }
+</div>

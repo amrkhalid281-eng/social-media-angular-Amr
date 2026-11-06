@@ -1,0 +1,71 @@
+<!-- Overlay: clicking the dark background closes the alert -->
+<div
+  class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/30 p-4"
+  (click)="close()"
+>
+  <!-- Card: stopPropagation so clicking inside doesn't close it -->
+  <div
+    class="flex max-h-[80vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+      <div class="flex items-center gap-2">
+        <span
+          class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#1877f2] text-white"
+        >
+          <span class="material-icons text-[14px] leading-none">thumb_up</span>
+        </span>
+        <h4 class="text-base font-extrabold text-slate-900">Likes</h4>
+        <span class="rounded-full bg-[#e7f3ff] px-2 py-0.5 text-xs font-bold text-[#1877f2]">
+          {{ total() }}
+        </span>
+      </div>
+      <button
+        type="button"
+        (click)="close()"
+        aria-label="Close"
+        class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+      >
+        <span class="material-icons text-[20px] leading-none">close</span>
+      </button>
+    </div>
+
+    <!-- List (scrolls inside the alert) -->
+    <div class="min-h-0 flex-1 overflow-y-auto p-2">
+      @for (user of users(); track user._id) {
+        <a
+          [routerLink]="profileLink(user)"
+          (click)="close()"
+          class="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-slate-50"
+        >
+          <img
+            [src]="user.photo || defaultPhoto"
+            [alt]="user.name"
+            class="h-10 w-10 shrink-0 rounded-full object-cover"
+          />
+          <div class="min-w-0">
+            <p class="truncate text-sm font-bold text-slate-900">{{ user.name }}</p>
+            @if (user.username) {
+              <p class="truncate text-xs text-slate-500">&#64;{{ user.username }}</p>
+            }
+          </div>
+        </a>
+      } @empty {
+        @if (!loading() && !errorMsg()) {
+          <p class="py-10 text-center text-sm text-slate-500">No likes yet.</p>
+        }
+      }
+
+      <!-- Reaching this div loads the next page -->
+      <div appInfiniteScroll (reached)="loadLikes()"></div>
+
+      @if (loading()) {
+        <p class="py-3 text-center text-sm text-slate-400">Loading...</p>
+      }
+      @if (errorMsg()) {
+        <p class="py-3 text-center text-sm font-semibold text-rose-600">{{ errorMsg() }}</p>
+      }
+    </div>
+  </div>
+</div>

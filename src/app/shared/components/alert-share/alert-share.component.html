@@ -1,0 +1,127 @@
+<div>
+  <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+    <h4 class="text-base font-extrabold text-slate-900">Share post</h4>
+    <button
+      type="button"
+      (click)="close()"
+      [disabled]="loading()"
+      aria-label="close"
+      class="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-60"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-x"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="space-y-3 p-4">
+    <textarea
+      [formControl]="shareText"
+      placeholder="Say something about this..."
+      rows="3"
+      maxlength="500"
+      class="w-full resize-none rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2]/20"
+    ></textarea>
+    <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div class="flex items-center gap-2">
+        <img
+          [alt]="post().user.name"
+          class="h-8 w-8 rounded-full object-cover"
+          [src]="post().user.photo"
+        />
+        <div class="min-w-0">
+          <p class="truncate text-sm font-bold text-slate-900">{{ post().user.name }}</p>
+          <p class="truncate text-xs font-semibold text-slate-500">{{ post().user.username }}</p>
+        </div>
+      </div>
+      @if (post().body) {
+        <p class="mt-2 whitespace-pre-wrap text-sm text-slate-800">{{ post().body }}</p>
+      }
+      @if (post().image) {
+        <img
+          alt="post preview"
+          class="mt-2 max-h-[220px] w-full rounded-lg object-cover"
+          [src]="post().image"
+        />
+      }
+      @if (post().sharedPost) {
+        <div class="mx-4 my-3 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+          @if (post().sharedPost; as shared) {
+            <div class="p-2">
+              <div class="mb-2 flex items-center gap-2">
+                <img
+                  [alt]="post().sharedPost?.user?.name"
+                  class="h-9 w-9 rounded-full object-cover"
+                  [src]="post().sharedPost?.user?.photo"
+                />
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-bold text-slate-900">
+                    {{ post().sharedPost?.user?.name }}
+                  </p>
+                  <p class="truncate text-xs text-slate-500">
+                    {{ post().sharedPost?.user?.username }}
+                  </p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-500">Shared post content unavailable.</p>
+            </div>
+            <div class="border-t border-slate-200">
+              @if (post().sharedPost?.body) {
+                <p class="ms-0.5 p-4 font-bold text-slate-600">{{ post().sharedPost?.body }}</p>
+              }
+              @if (shared.image) {
+                <button
+                  type="button"
+                  class="group relative block w-full cursor-zoom-in"
+                >
+                  <img
+                    alt="Shared post"
+                    class="max-h-[560px] w-full object-cover"
+                    [src]="shared.image"
+                  /><span
+                    class="cursor-pointer absolute inset-0 bg-black/0 transition group-hover:bg-black/10"
+                  ></span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+      @if (errorMsg()) {
+        <p class="text-sm font-semibold text-rose-600">{{ errorMsg() }}</p>
+      }
+    </div>
+  </div>
+  <div class="flex items-center justify-end gap-2 border-t border-slate-200 px-4 py-3">
+    <button
+      type="button"
+      (click)="close()"
+      [disabled]="loading()"
+      class="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:opacity-60"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      (click)="share()"
+      [disabled]="loading()"
+      [class.cursor-pointer]="!loading()"
+      [class.cursor-not-allowed]="loading()"
+      class="inline-flex items-center rounded-lg bg-[#1877f2] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#166fe5] disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {{ loading() ? 'sharing... ' : 'Share now' }}
+    </button>
+  </div>
+</div>

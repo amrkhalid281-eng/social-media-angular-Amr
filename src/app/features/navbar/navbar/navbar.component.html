@@ -1,0 +1,112 @@
+<header class="sticky top-0 z-30 border-b border-slate-200 bg-white">
+  <div class="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-y-3 px-4 py-3">
+
+    <!-- Logo -->
+    <a routerLink="feeds" class="flex items-center gap-3">
+      <img src="/image/route.png" alt="Route Posts" class="h-10 w-10 rounded-xl object-cover" />
+      <span class="hidden text-xl font-extrabold text-slate-900 sm:block md:hidden lg:block">Route Posts</span>
+    </a>
+
+    <!-- Right side: profile dropdown + burger -->
+    <div class="flex items-center gap-2">
+
+      <!-- Profile button (Flowbite dropdown) -->
+      <button
+        id="profile-button"
+        type="button"
+        data-dropdown-toggle="profile-menu"
+        data-dropdown-placement="bottom-end"
+        class="flex items-center gap-2 rounded-full cursor-pointer border border-slate-200 bg-slate-50 px-2 py-1.5 transition hover:bg-slate-100"
+      >
+        <img
+          src="https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/default-profile.png"
+          alt="Profile"
+          class="h-8 w-8 rounded-full object-cover"
+        />
+        <span class="hidden max-w-[140px] truncate text-sm font-semibold text-slate-800 sm:block md:hidden lg:block">
+          Dolorem velit provi
+        </span>
+        <span class="material-icons hidden text-lg text-slate-500 sm:block md:hidden lg:block">menu</span>
+      </button>
+
+      <!-- Dropdown menu -->
+      <div id="profile-menu" class="z-50 hidden w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+        <a
+          routerLink="/profile"
+          class="flex w-full items-center gap-2 cursor-pointer rounded px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+        >
+          <span class="material-icons text-lg">person_outline</span>
+          Profile
+        </a>
+        <button
+          type="button"
+          class="flex w-full items-center gap-2 cursor-pointer rounded px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+        >
+          <span class="material-icons text-lg">settings</span>
+          Settings
+        </button>
+        <div class="my-1 border-t border-slate-200"></div>
+        <a
+          (click)="navbarLogout()"
+          class="flex w-full items-center gap-2 cursor-pointer rounded px-3 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50"
+        >
+          Logout
+        </a>
+      </div>
+
+      <!-- Burger (mobile only, Flowbite collapse) -->
+      <button
+        type="button"
+        data-collapse-toggle="navbar-menu"
+        aria-controls="navbar-menu"
+        aria-expanded="false"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:bg-slate-100 md:hidden"
+      >
+        <span class="sr-only">Open main menu</span>
+        <span class="material-icons">menu</span>
+      </button>
+    </div>
+
+    <!-- Nav links: collapsible on mobile, centered on desktop -->
+    <nav
+      id="navbar-menu"
+      class="order-last hidden w-full md:absolute md:left-1/2 md:top-1/2 md:order-none md:block md:w-auto md:-translate-x-1/2 md:-translate-y-1/2"
+    >
+      <div class="flex flex-col gap-1 rounded-2xl border border-slate-200 bg-slate-50 p-1 md:flex-row">
+        <a
+          routerLink="feeds"
+          routerLinkActive="is-active"
+          class="flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-600 transition [&.is-active]:bg-white [&.is-active]:text-[#1f6fe5] [&.is-active]:shadow-sm [&:not(.is-active)]:hover:bg-white/80 [&:not(.is-active)]:hover:text-slate-900"
+        >
+          <span class="material-icons text-xl">home</span>
+          Feed
+        </a>
+        <a
+          routerLink="profile"
+          routerLinkActive="is-active"
+          class="flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-600 transition [&.is-active]:bg-white [&.is-active]:text-[#1f6fe5] [&.is-active]:shadow-sm [&:not(.is-active)]:hover:bg-white/80 [&:not(.is-active)]:hover:text-slate-900"
+        >
+          <span class="material-icons text-xl">person_outline</span>
+          Profile
+        </a>
+        <a
+          routerLink="notification"
+          routerLinkActive="is-active"
+          class="flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-600 transition [&.is-active]:bg-white [&.is-active]:text-[#1f6fe5] [&.is-active]:shadow-sm [&:not(.is-active)]:hover:bg-white/80 [&:not(.is-active)]:hover:text-slate-900"
+        >
+          <div class="relative">
+            <span class="material-icons text-xl">chat_bubble_outline</span>
+            @if (countNotification() > 0) {
+              <div
+                class="absolute right-3 bottom-5 w-4 h-4 flex justify-center items-center rounded-full bg-red-500 p-1 text-white cursor-pointer"
+              >
+                <p class="text-[10px]">{{countNotification()}}</p>
+              </div>
+            }
+          </div>
+          Notifications
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>

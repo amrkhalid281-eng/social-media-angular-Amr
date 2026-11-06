@@ -1,0 +1,8 @@
+<div>
+  @for (post of feedPosts(); track post._id) {
+    <app-post-card [post]="post" />
+  }
+  <div class="flex min-h-10 items-center justify-center">
+    <span class="text-sm font-semibold text-slate-400">You reached the end</span>
+  </div>
+</div>

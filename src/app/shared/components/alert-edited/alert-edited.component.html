@@ -1,0 +1,110 @@
+<!-- Overlay: clicking the dark background closes the alert -->
+<div
+  class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/30 p-4"
+  (click)="close()"
+>
+  <!-- Card: stopPropagation so clicking inside doesn't close it -->
+  <div
+    class="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+      <h4 class="text-base font-extrabold text-slate-900">Edit post</h4>
+      <button
+        type="button"
+        (click)="close()"
+        [disabled]="loading()"
+        aria-label="Close"
+        class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-60"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="space-y-3 p-4">
+      <textarea
+        [formControl]="bodyCtrl"
+        placeholder="What's on your mind?"
+        rows="4"
+        class="w-full resize-none rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-[#1877f2] focus:ring-2 focus:ring-[#1877f2]/20"
+      ></textarea>
+
+      <!-- Current image, or the new one the user picked -->
+      @if (newImgUrl() || post().image) {
+        <div class="overflow-hidden rounded-xl border border-slate-200">
+          <img
+            alt="post image"
+            class="max-h-[260px] w-full object-cover"
+            [src]="newImgUrl() || post().image"
+          />
+        </div>
+      }
+
+      <div class="flex items-center gap-2">
+        <label
+          class="inline-flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+        >
+          <span class="material-icons text-lg text-emerald-600">image</span>
+          {{ post().image || newImgUrl() ? 'Change photo' : 'Add photo' }}
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            class="hidden"
+            (change)="holdImage($event)"
+          />
+        </label>
+
+        @if (newImgFile) {
+          <button
+            type="button"
+            (click)="removeNewImage(fileInput)"
+            class="cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-slate-500 transition hover:bg-slate-100"
+          >
+            Undo
+          </button>
+        }
+      </div>
+
+      @if (errorMsg()) {
+        <p class="text-sm font-semibold text-rose-600">{{ errorMsg() }}</p>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2 border-t border-slate-200 px-4 py-3">
+      <button
+        type="button"
+        (click)="close()"
+        [disabled]="loading()"
+        class="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        (click)="update()"
+        [disabled]="!canSave || loading()"
+        class="inline-flex cursor-pointer items-center rounded-lg bg-[#1877f2] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#166fe5] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {{ loading() ? 'Saving...' : 'Save changes' }}
+      </button>
+    </div>
+  </div>
+</div>

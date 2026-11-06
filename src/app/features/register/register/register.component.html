@@ -1,0 +1,163 @@
+<div class="mt-6">
+  <!-- Heading -->
+  <h2 class="text-2xl font-bold text-slate-900">Create a new account</h2>
+  <p class="mt-1 text-sm text-slate-500">It is quick and easy.</p>
+
+  <form [formGroup]="registerForm" (ngSubmit)="registerSubmit()" class="mt-4 flex flex-col gap-2">
+    <!-- Full name -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >person_outline</span>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Full name"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [&.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
+        <p class="mt-1 text-xs text-red-600">
+          @if (registerForm.get('name')?.hasError('required')) { Full name is required. }
+          @else if (registerForm.get('name')?.hasError('minlength')) { Full name must be at least 3 characters. }
+          @else {Name must be letters only, with at least 3 letters per word.}
+        </p>
+      }
+    </div>
+
+    <!-- Username -->
+    <div class="relative">
+      <span
+        class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+        >alternate_email</span
+      >
+      <input
+        type="text"
+        formControlName="username"
+        placeholder="Username (optional)"
+        class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-valid]:border-green-800"
+      />
+    </div>
+
+    <!-- Email -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >alternate_email</span>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Email address"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+        <p class="mt-2 text-xs text-red-600">
+          @if (registerForm.get('email')?.hasError('required')) { Email is required. }
+          @else if (registerForm.get('email')?.hasError('email')) { Enter a valid email address. }
+        </p>
+      }
+    </div>
+
+    <!-- Gender -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >people_outline</span>
+        <select
+          formControlName="gender"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-600 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [&.ng-valid]:border-green-800"
+        >
+          <option value="" selected disabled>Select gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      @if (registerForm.get('gender')?.touched && registerForm.get('gender')?.invalid) {
+        <p class="mt-1 text-xs text-red-600">Please select your gender.</p>
+      }
+    </div>
+
+    <!-- Date of birth -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >calendar_today</span
+        >
+        <input
+          type="date"
+          formControlName="dateOfBirth"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-500 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [&.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (registerForm.get('dateOfBirth')?.touched && registerForm.get('dateOfBirth')?.invalid) {
+        <p class="mt-1 text-xs text-red-600">
+          @if (registerForm.get('dateOfBirth')?.hasError('required')) { Date of birth is required. }
+        </p>
+      }
+    </div>
+
+    <!-- Password -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >vpn_key</span
+        >
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+        <p class="mt-1 text-xs text-red-600">
+          @if (registerForm.get('password')?.hasError('required')) { Password is required. }
+          @else {password is not valid}
+        </p>
+      }
+    </div>
+
+    <!-- Confirm password -->
+    <div>
+      <div class="relative">
+        <span
+          class="material-icons pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"
+          >vpn_key</span
+        >
+        <input
+          type="password"
+          formControlName="rePassword"
+          placeholder="Confirm password"
+          class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 [&.ng-touched.ng-invalid]:border-red-500 [.ng-valid]:border-green-800"
+        />
+      </div>
+      @if (registerForm.get('rePassword')?.touched && registerForm.get('rePassword')?.hasError) {
+        <p class="mt-1 text-xs text-red-600">
+          @if (registerForm.get('rePassword')?.hasError('required')) { Please confirm your password. }
+        </p>
+      }
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="mt-2 w-full rounded-xl bg-blue-900 py-3.5 text-base font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+    >
+      Create New Account 
+      @if(loading()){
+        <i class="fas fa-spinner fa-spin"></i>
+      }
+    </button>
+
+    <!-- msgError Form -->
+    @if (msgError()) {
+      <p class="text-center text-red-700 py-4">{{msgError()}}</p>
+    }
+  </form>
+</div>
